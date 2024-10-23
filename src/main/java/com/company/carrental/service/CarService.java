@@ -30,6 +30,12 @@ public class CarService {
                 .collect(Collectors.toList());
     }
 
+    public List<CarDTO> getCarsByType(CarType carType) {
+        return carRepository.findByCarType(carType).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     public CarDTO getCarById(Long id) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Car not found"));
@@ -42,12 +48,25 @@ public class CarService {
                 .collect(Collectors.toList());
     }
 
+    public List<CarDTO> getAvailableCarsByType(CarType carType) {
+        return carRepository.findByCarTypeAndStatus(
+                carType, Car.CarStatus.AVAILABLE).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+    }
+
     @Transactional
     public CarDTO createCar(CarDTO carDTO) {
         Car car = new Car();
         updateCarFromDTO(car, carDTO);
         Car savedCar = carRepository.save(car);
         return convertToDTO(savedCar);
+    }
+
+    @Transactional
+    public void deleteCar(Long id) {
+        carRepository.deleteById(id);
     }
 
     @Transactional
@@ -59,24 +78,20 @@ public class CarService {
         return convertToDTO(updatedCar);
     }
 
-    @Transactional
-    public void deleteCar(Long id) {
-        carRepository.deleteById(id);
-    }
-
     private CarDTO convertToDTO(Car car) {
         CarDTO dto = new CarDTO();
         dto.setCarId(car.getCarId());
         dto.setStatus(car.getStatus());
-        // Set CarType DTO
+        if (car.getCarType() != null) {
+            dto.setVehicleType(car.getCarType().getVechicleType());
+        }
         return dto;
     }
 
     private void updateCarFromDTO(Car car, CarDTO carDTO) {
         car.setStatus(carDTO.getStatus());
-        if (carDTO.getCarType() != null) {
-            CarType carType = carTypeRepository.findById(carDTO.getCarType().getCarTypeId())
-                    .orElseThrow(() -> new RuntimeException("CarType not found"));
+        if (carDTO.getVehicleType() != null) {
+            CarType carType = carTypeRepository.findByVehicleType(carDTO.getVehicleType());
             car.setCarType(carType);
         }
     }
