@@ -23,7 +23,7 @@ public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long carId;
+    private int carId;
 
     @ManyToOne
     @JoinColumn(name = "car_type_id", nullable = false)
@@ -38,11 +38,11 @@ public class Car {
     }
 
     // Getters and setters
-    public Long getCarId() {
+    public int getCarId() {
         return carId;
     }
 
-    public void setCarId(Long carId) {
+    public void setCarId(int carId) {
         this.carId = carId;
     }
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CarRepository extends JpaRepository<Car, Long> {
+public interface CarRepository extends JpaRepository<Car, Integer> {
     List<Car> findByCarTypeAndStatus(CarType carType, Car.CarStatus status);
 
     List<Car> findByStatus(Car.CarStatus status);

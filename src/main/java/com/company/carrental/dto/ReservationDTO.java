@@ -5,7 +5,7 @@ import com.company.carrental.entity.Reservation;
 import java.time.LocalDateTime;
 
 public class ReservationDTO {
-    private Long reservationId;
+    private Integer reservationId;
     private UserDTO user;
     private CarDTO car;
     private LocalDateTime startDate;
@@ -13,11 +13,11 @@ public class ReservationDTO {
     private Reservation.ReservationStatus status;
 
     // Getters and setters
-    public Long getReservationId() {
+    public Integer getReservationId() {
         return reservationId;
     }
 
-    public void setReservationId(Long reservationId) {
+    public void setReservationId(Integer reservationId) {
         this.reservationId = reservationId;
     }
 

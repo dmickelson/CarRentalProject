@@ -36,7 +36,7 @@ public class CarService {
                 .collect(Collectors.toList());
     }
 
-    public CarDTO getCarById(Long id) {
+    public CarDTO getCarById(int id) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Car not found"));
         return convertToDTO(car);
@@ -65,12 +65,12 @@ public class CarService {
     }
 
     @Transactional
-    public void deleteCar(Long id) {
+    public void deleteCar(int id) {
         carRepository.deleteById(id);
     }
 
     @Transactional
-    public CarDTO updateCar(Long id, CarDTO carDTO) {
+    public CarDTO updateCar(int id, CarDTO carDTO) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Car not found"));
         updateCarFromDTO(car, carDTO);

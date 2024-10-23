@@ -3,14 +3,14 @@ package com.company.carrental.dto;
 import com.company.carrental.entity.CarType.VechicleType;
 
 public class CarTypeDTO {
-    private Long carTypeId;
+    private int carTypeId;
     private VechicleType vehicleType;
 
-    public Long getCarTypeId() {
+    public int getCarTypeId() {
         return carTypeId;
     }
 
-    public void setCarTypeId(Long carTypeId) {
+    public void setCarTypeId(int carTypeId) {
         this.carTypeId = carTypeId;
     }
 

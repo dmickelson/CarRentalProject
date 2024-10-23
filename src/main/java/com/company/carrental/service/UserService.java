@@ -25,14 +25,14 @@ public class UserService {
         return convertToDTO(savedUser);
     }
 
-    public UserDTO getUserById(Long id) {
+    public UserDTO getUserById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return convertToDTO(user);
     }
 
     @Transactional
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserDTO updateUser(Integer id, UserDTO userDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         updateUserFromDTO(user, userDTO);
@@ -41,7 +41,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
 

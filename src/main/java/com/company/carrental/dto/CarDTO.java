@@ -4,15 +4,15 @@ import com.company.carrental.entity.Car;
 import com.company.carrental.entity.CarType.VechicleType;
 
 public class CarDTO {
-    private Long carId;
+    private int carId;
     private VechicleType vehicleType;
     private Car.CarStatus status;
 
-    public Long getCarId() {
+    public int getCarId() {
         return carId;
     }
 
-    public void setCarId(Long carId) {
+    public void setCarId(int carId) {
         this.carId = carId;
     }
 

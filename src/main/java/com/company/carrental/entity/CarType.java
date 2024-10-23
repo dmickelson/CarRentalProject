@@ -24,7 +24,7 @@ public class CarType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long carTypeId;
+    private int carTypeId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
@@ -35,11 +35,11 @@ public class CarType {
     }
 
     // Getters and setters
-    public Long getCarTypeId() {
+    public int getCarTypeId() {
         return carTypeId;
     }
 
-    public void setCarTypeId(Long carTypeId) {
+    public void setCarTypeId(int carTypeId) {
         this.carTypeId = carTypeId;
     }
 

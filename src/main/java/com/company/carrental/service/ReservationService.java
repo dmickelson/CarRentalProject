@@ -54,13 +54,13 @@ public class ReservationService {
         return convertToDTO(savedReservation);
     }
 
-    public ReservationDTO getReservationById(Long id) {
+    public ReservationDTO getReservationById(Integer id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reservation not found"));
         return convertToDTO(reservation);
     }
 
-    public List<ReservationDTO> getUserReservations(Long userId) {
+    public List<ReservationDTO> getUserReservations(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         List<Reservation> reservations = reservationRepository.findByUser(user);
@@ -68,7 +68,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationDTO updateReservation(Long id, ReservationDTO reservationDTO) {
+    public ReservationDTO updateReservation(Integer id, ReservationDTO reservationDTO) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reservation not found"));
 
@@ -81,7 +81,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(Long id) {
+    public void cancelReservation(Integer id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reservation not found"));
 

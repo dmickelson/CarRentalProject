@@ -26,26 +26,26 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationDTO> getReservation(@PathVariable Long id) {
+    public ResponseEntity<ReservationDTO> getReservation(@PathVariable Integer id) {
         ReservationDTO reservation = reservationService.getReservationById(id);
         return ResponseEntity.ok(reservation);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReservationDTO>> getUserReservations(@PathVariable Long userId) {
+    public ResponseEntity<List<ReservationDTO>> getUserReservations(@PathVariable Integer userId) {
         List<ReservationDTO> reservations = reservationService.getUserReservations(userId);
         return ResponseEntity.ok(reservations);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Long id,
+    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Integer id,
             @RequestBody ReservationDTO reservationDTO) {
         ReservationDTO updatedReservation = reservationService.updateReservation(id, reservationDTO);
         return ResponseEntity.ok(updatedReservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> cancelReservation(@PathVariable Integer id) {
         reservationService.cancelReservation(id);
         return ResponseEntity.noContent().build();
     }

@@ -24,19 +24,19 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
         UserDTO user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

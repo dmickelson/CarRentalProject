@@ -18,7 +18,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private int userId;
 
     @Column(nullable = false)
     private String firstName;
@@ -33,11 +33,11 @@ public class User {
     private String password;
 
     // Getters and setters
-    public Long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
