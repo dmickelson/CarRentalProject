@@ -79,6 +79,7 @@ Comprehensive integration tests covering:
 
 ## Class Architecture
 
+```mermaid
 classDiagram
 %% Core Domain Entities
 class Car {
