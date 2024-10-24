@@ -121,14 +121,10 @@ classDiagram
         -String lastName
     }
 
-    %% Factories
+    %% Factory
     class CarFactory {
         +createCar(CarDTO) Car
         +createCarDTO(Car) CarDTO
-    }
-    class ReservationFactory {
-        +createReservation(ReservationDTO) Reservation
-        +createReservationDTO(Reservation) ReservationDTO
     }
 
     %% Relationships
@@ -138,8 +134,6 @@ classDiagram
 
     CarFactory ..> Car : creates
     CarFactory ..> CarDTO : creates
-    ReservationFactory ..> Reservation : creates
-    ReservationFactory ..> ReservationDTO : creates
 
     CarDTO ..> Car : transforms
     ReservationDTO ..> Reservation : transforms
