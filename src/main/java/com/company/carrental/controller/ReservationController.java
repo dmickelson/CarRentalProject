@@ -19,6 +19,12 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<ReservationDTO>> getAllReservations() {
+        List<ReservationDTO> cars = reservationService.getAllReservations();
+        return ResponseEntity.ok(cars);
+    }
+
     @PostMapping
     public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
         ReservationDTO createdReservation = reservationService.createReservation(reservationDTO);

@@ -3,6 +3,8 @@ package com.company.carrental.service;
 import com.company.carrental.dto.CarDTO;
 import com.company.carrental.entity.Car;
 import com.company.carrental.entity.CarType;
+import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.factory.*;
 import com.company.carrental.repository.CarRepository;
 import com.company.carrental.repository.CarTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,11 +20,18 @@ public class CarService {
 
     private final CarRepository carRepository;
     private final CarTypeRepository carTypeRepository;
+    private final Map<VechicleType, VehicleTypeFactory> vehicleFactories;
 
     @Autowired
-    public CarService(CarRepository carRepository, CarTypeRepository carTypeRepository) {
+    public CarService(CarRepository carRepository,
+            CarTypeRepository carTypeRepository,
+            List<VehicleTypeFactory> factories) {
         this.carRepository = carRepository;
         this.carTypeRepository = carTypeRepository;
+        this.vehicleFactories = factories.stream()
+                .collect(Collectors.toMap(
+                        factory -> factory.createVehicle().getVechicleType(),
+                        factory -> factory));
     }
 
     public List<CarDTO> getAllCars() {
@@ -78,7 +88,7 @@ public class CarService {
         return convertToDTO(updatedCar);
     }
 
-    private CarDTO convertToDTO(Car car) {
+    public CarDTO convertToDTO(Car car) {
         CarDTO dto = new CarDTO();
         dto.setCarId(car.getCarId());
         dto.setStatus(car.getStatus());
@@ -92,6 +102,11 @@ public class CarService {
         car.setStatus(carDTO.getStatus());
         if (carDTO.getVehicleType() != null) {
             CarType carType = carTypeRepository.findByVehicleType(carDTO.getVehicleType());
+            if (carType == null) {
+                VehicleTypeFactory factory = vehicleFactories.get(carDTO.getVehicleType());
+                carType = factory.createVehicle();
+                carType = carTypeRepository.save(carType);
+            }
             car.setCarType(carType);
         }
     }

@@ -11,13 +11,11 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "car_types")
 @Component
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 
 public class CarType {
@@ -32,6 +30,14 @@ public class CarType {
 
     public enum VechicleType {
         SEDAN, SUV, VAN
+    }
+
+    public CarType() {
+        // Default constructor
+    }
+
+    public CarType(VechicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     // Getters and setters

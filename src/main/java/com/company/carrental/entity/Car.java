@@ -11,13 +11,11 @@ import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Component
 @Table(name = "cars")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class Car {
 
@@ -34,7 +32,17 @@ public class Car {
     private CarStatus status;
 
     public enum CarStatus {
-        AVAILABLE, RESERVED
+        AVAILABLE, RESERVED, MAINTENANCE
+    }
+
+    public Car() {
+        // Default constructor
+    }
+
+    // Constructor for creating new cars
+    public Car(CarType carType, CarStatus status) {
+        this.carType = carType;
+        this.status = status;
     }
 
     // Getters and setters

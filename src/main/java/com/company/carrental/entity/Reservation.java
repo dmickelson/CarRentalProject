@@ -4,17 +4,15 @@ import jakarta.persistence.*;
 
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Component
 @Table(name = "reservations")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 
 public class Reservation {
@@ -32,10 +30,10 @@ public class Reservation {
     private Car car;
 
     @Column(nullable = false)
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -43,6 +41,18 @@ public class Reservation {
 
     public enum ReservationStatus {
         ACTIVE, CANCELLED, COMPLETED
+    }
+
+    public Reservation() {
+        // Default constructor
+    }
+
+    public Reservation(User user, Car car, LocalDate startDate, LocalDate endDate, ReservationStatus status) {
+        this.user = user;
+        this.car = car;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
     }
 
     // Getters and setters
@@ -70,19 +80,19 @@ public class Reservation {
         this.car = car;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

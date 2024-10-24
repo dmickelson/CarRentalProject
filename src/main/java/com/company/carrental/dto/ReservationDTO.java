@@ -2,14 +2,14 @@ package com.company.carrental.dto;
 
 import com.company.carrental.entity.Reservation;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class ReservationDTO {
     private Integer reservationId;
     private UserDTO user;
     private CarDTO car;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private Reservation.ReservationStatus status;
 
     // Getters and setters
@@ -37,19 +37,19 @@ public class ReservationDTO {
         this.car = car;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

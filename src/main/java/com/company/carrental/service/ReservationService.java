@@ -14,19 +14,34 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.time.LocalDate;
+
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final CarRepository carRepository;
     private final UserRepository userRepository;
+    private final CarService carService;
+    private final UserService userService;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, CarRepository carRepository,
-            UserRepository userRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+            CarRepository carRepository,
+            UserRepository userRepository,
+            CarService carService,
+            UserService userService) {
         this.reservationRepository = reservationRepository;
         this.carRepository = carRepository;
         this.userRepository = userRepository;
+        this.carService = carService;
+        this.userService = userService;
+    }
+
+    public List<ReservationDTO> getAllReservations() {
+        return reservationRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -36,8 +51,21 @@ public class ReservationService {
         Car car = carRepository.findById(reservationDTO.getCar().getCarId())
                 .orElseThrow(() -> new RuntimeException("Car not found"));
 
-        if (car.getStatus() != Car.CarStatus.AVAILABLE) {
-            throw new RuntimeException("Car is not available for reservation");
+        List<Reservation> existingReservations = findExistingActiveReservationsForCar(car.getCarId());
+
+        boolean hasOverlap = existingReservations.stream()
+                .filter(r -> r.getStatus() == Reservation.ReservationStatus.ACTIVE)
+                .anyMatch(existing -> {
+                    return (reservationDTO.getStartDate().isBefore(existing.getEndDate()) ||
+                            reservationDTO.getStartDate().isEqual(existing.getEndDate())) &&
+                            (reservationDTO.getEndDate().isAfter(existing.getStartDate()) ||
+                                    reservationDTO.getEndDate().isEqual(existing.getStartDate()));
+                });
+
+        if (hasOverlap) {
+            throw new RuntimeException(
+                    "Car is already reserved for the selected dates: " + reservationDTO.getStartDate() + " "
+                            + reservationDTO.getEndDate() + " " + car.toString() + " " + user.toString());
         }
 
         Reservation reservation = new Reservation();
@@ -52,6 +80,12 @@ public class ReservationService {
 
         Reservation savedReservation = reservationRepository.save(reservation);
         return convertToDTO(savedReservation);
+    }
+
+    public List<Reservation> findExistingActiveReservationsForCar(Integer carId) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new RuntimeException("Car not found"));
+        return reservationRepository.findByCarAndStatus(car, Reservation.ReservationStatus.ACTIVE);
     }
 
     public ReservationDTO getReservationById(Integer id) {
@@ -96,7 +130,11 @@ public class ReservationService {
     private ReservationDTO convertToDTO(Reservation reservation) {
         ReservationDTO dto = new ReservationDTO();
         dto.setReservationId(reservation.getReservationId());
-        // Set other fields...
+        dto.setStatus(reservation.getStatus());
+        dto.setStartDate(reservation.getStartDate());
+        dto.setEndDate(reservation.getEndDate());
+        dto.setUser(userService.getUserById(reservation.getUser().getUserId()));
+        dto.setCar(carService.getCarById(reservation.getCar().getCarId()));
         return dto;
     }
 }
