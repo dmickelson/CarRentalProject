@@ -79,29 +79,28 @@ Comprehensive integration tests covering:
 
 ## Class Architecture
 
-```mermaid
 classDiagram
-    %% Core Domain Entities
-    class Car {
-        -Integer carId
-        -CarStatus status
-        -CarType type
-    }
-    class CarType {
-        -VehicleType type
-        -Integer typeId
-    }
-    class Reservation {
-        -Integer reservationId
-        -LocalDate startDate
-        -LocalDate endDate
-        -ReservationStatus status
-    }
-    class User {
-        -Integer userId
-        -String username
-        -String password
-    }
+%% Core Domain Entities
+class Car {
+-Integer carId
+-CarStatus status
+-CarType type
+}
+class CarType {
+-VehicleType type
+-Integer typeId
+}
+class Reservation {
+-Integer reservationId
+-LocalDate startDate
+-LocalDate endDate
+-ReservationStatus status
+}
+class User {
+-Integer userId
+-String username
+-String password
+}
 
     %% DTOs
     class CarDTO {
@@ -121,6 +120,34 @@ classDiagram
         -String lastName
     }
 
+    %% Services
+    class CarService {
+        +getCar(Integer) CarDTO
+        +updateCarStatus(Integer, Status) CarDTO
+    }
+    class ReservationService {
+        +createReservation(ReservationDTO) ReservationDTO
+        +getReservation(Integer) ReservationDTO
+    }
+    class UserService {
+        +getUser(Integer) UserDTO
+        +createUser(UserDTO) UserDTO
+    }
+
+    %% Controllers
+    class CarController {
+        +getCar(Integer) ResponseEntity
+        +updateCar(CarDTO) ResponseEntity
+    }
+    class ReservationController {
+        +createReservation(ReservationDTO) ResponseEntity
+        +getReservation(Integer) ResponseEntity
+    }
+    class UserController {
+        +getUser(Integer) ResponseEntity
+        +createUser(UserDTO) ResponseEntity
+    }
+
     %% Factory
     class CarFactory {
         +createCar(CarDTO) Car
@@ -131,6 +158,15 @@ classDiagram
     Car --> CarType
     Reservation --> Car
     Reservation --> User
+
+    CarController --> CarService
+    ReservationController --> ReservationService
+    UserController --> UserService
+
+    CarService --> CarFactory
+    CarService --> CarDTO
+    ReservationService --> ReservationDTO
+    UserService --> UserDTO
 
     CarFactory ..> Car : creates
     CarFactory ..> CarDTO : creates
@@ -144,6 +180,7 @@ classDiagram
 ## Dependencies
 
 ```
+
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
