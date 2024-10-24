@@ -50,22 +50,24 @@ public class ReservationService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Car car = carRepository.findById(reservationDTO.getCar().getCarId())
                 .orElseThrow(() -> new RuntimeException("Car not found"));
-
+        System.out
+                .println("*** Checking for existing reservations for the car:" + reservationDTO.getCar() + " dates: "
+                        + reservationDTO.getStartDate() + " "
+                        + reservationDTO.getEndDate());
         List<Reservation> existingReservations = findExistingActiveReservationsForCar(car.getCarId());
 
         boolean hasOverlap = existingReservations.stream()
                 .filter(r -> r.getStatus() == Reservation.ReservationStatus.ACTIVE)
                 .anyMatch(existing -> {
-                    return (reservationDTO.getStartDate().isBefore(existing.getEndDate()) ||
-                            reservationDTO.getStartDate().isEqual(existing.getEndDate())) &&
-                            (reservationDTO.getEndDate().isAfter(existing.getStartDate()) ||
-                                    reservationDTO.getEndDate().isEqual(existing.getStartDate()));
+                    return reservationDTO.getStartDate().isBefore(existing.getEndDate()) &&
+                            reservationDTO.getEndDate().isAfter(existing.getStartDate());
                 });
 
         if (hasOverlap) {
             throw new RuntimeException(
-                    "Car is already reserved for the selected dates: " + reservationDTO.getStartDate() + " "
-                            + reservationDTO.getEndDate() + " " + car.toString() + " " + user.toString());
+                    "Car is already reserved for the selected dates: starting:" + reservationDTO.getStartDate()
+                            + " ending:"
+                            + reservationDTO.getEndDate() + " " + car.toString());
         }
 
         Reservation reservation = new Reservation();
@@ -75,7 +77,11 @@ public class ReservationService {
         reservation.setEndDate(reservationDTO.getEndDate());
         reservation.setStatus(Reservation.ReservationStatus.ACTIVE);
 
-        car.setStatus(Car.CarStatus.RESERVED);
+        if (reservation.getStartDate().isEqual(LocalDate.now())) {
+            car.setStatus(Car.CarStatus.RESERVED);
+        } else {
+            car.setStatus(Car.CarStatus.AVAILABLE);
+        }
         carRepository.save(car);
 
         Reservation savedReservation = reservationRepository.save(reservation);

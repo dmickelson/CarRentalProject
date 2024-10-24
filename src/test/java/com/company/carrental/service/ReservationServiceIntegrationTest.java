@@ -1,22 +1,54 @@
+/*
+#ReservationServiceIntegrationTest Documentation
+
+## Overview 
+Integration test suite for the Reservation Service in the Car Rental Project.Tests the complete reservation 
+workflow with real repository interactions.
+
+## Key Test Cases
+
+1.`shouldSuccessfullyCreateMultipleReservationsAcrossMonths`
+  -Validates creation of non-overlapping reservations across different months
+  -Tests reservation creation for October and November 2024
+
+2.`shouldFailWhenCreatingOverlappingReservations`
+  -Verifies system prevents double-booking of the same car
+  -Tests overlapping date ranges throw appropriate exceptions
+
+3.`shouldHandleMultipleReservationsForDifferentCars`
+  -Validates simultaneous bookings for different vehicle types
+  -Ensures distinct cars can be reserved for the same time period
+
+4.`shouldFailWhenAllCarsOfDifferentTypesAreReservedForRequestedPeriod`
+  -Tests system behavior when all vehicles are booked
+  -Verifies proper handling of fully-booked scenarios
+
+##Test Setup
+  -Uses`@SpringBootTest`for full application context
+  -Implements`@BeforeEach`to reset test data
+  -Creates test data for:
+    -Car Types(SEDAN,SUV,VAN)
+    -Users
+    -Cars
+    -Reservations
+
+## Helper Methods
+  -`createTestUserDTO`:Creates user data transfer objects
+  -`createTestCarDTO`:Creates car data transfer objects
+  -`createTestCar`:Creates car entities
+  -`createTestUser`:Creates user entities
+  -`createReservationDTO`:Creates reservation data transfer objects
+
+*/
+
 package com.company.carrental.service;
 
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.Arrays;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.checkerframework.checker.units.qual.s;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.company.carrental.dto.CarDTO;
@@ -28,72 +60,84 @@ import com.company.carrental.entity.Reservation;
 import com.company.carrental.entity.User;
 import com.company.carrental.entity.CarType.VechicleType;
 import com.company.carrental.repository.CarRepository;
+import com.company.carrental.repository.CarTypeRepository;
 import com.company.carrental.repository.ReservationRepository;
 import com.company.carrental.repository.UserRepository;
 
 @SpringBootTest
 public class ReservationServiceIntegrationTest {
 
-    @Mock
+    @Autowired
     private ReservationRepository reservationRepository;
-    @Mock
+    @Autowired
+    private CarTypeRepository carTypeRepository;
+    @Autowired
     private CarRepository carRepository;
-    @Mock
+    @Autowired
     private UserRepository userRepository;
-    @Mock
+    @Autowired
     private CarService carService;
-    @Mock
+    @Autowired
     private UserService userService;
 
     private ReservationService reservationService;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        // Clear existing data
+        reservationRepository.deleteAll();
+        carRepository.deleteAll();
+        userRepository.deleteAll();
+        carTypeRepository.deleteAll();
+
+        // Create and persist car types
+        CarType sedanType = new CarType(VechicleType.SEDAN);
+        CarType suvType = new CarType(VechicleType.SUV);
+        CarType vanType = new CarType(VechicleType.VAN);
+
+        carTypeRepository.save(sedanType);
+        carTypeRepository.save(suvType);
+        carTypeRepository.save(vanType);
+
+        // Initialize the service with real repositories
         reservationService = new ReservationService(
                 reservationRepository,
                 carRepository,
                 userRepository,
                 carService,
                 userService);
-        // Common mocks
-        when(userRepository.findById(anyInt())).thenReturn(Optional.of(createTestUser(1)));
-        when(userService.getUserById(anyInt())).thenReturn(createTestUserDTO(1));
     }
 
     @Test
     void shouldSuccessfullyCreateMultipleReservationsAcrossMonths() {
-        // Setup test data
-        UserDTO userDTO = createTestUserDTO(1);
-        CarDTO carDTO = createTestCarDTO(1);
-        Car car = createTestCar(carDTO.getCarId(), Car.CarStatus.AVAILABLE);
-        User user = createTestUser(userDTO.getUserId());
+        // Create and persist a test user
+        User user = createTestUser(1);
+        User savedUser = userRepository.save(user);
 
-        // Create multiple reservations across different months
+        // Create and persist a test car
+        CarType sedanType = carTypeRepository.findByVehicleType(VechicleType.SEDAN);
+        Car car = createTestCar(1, sedanType.getVehicleType(), Car.CarStatus.AVAILABLE);
+        Car savedCar = carRepository.save(car);
+
+        // Create reservation DTOs
+        UserDTO userDTO = createTestUserDTO(savedUser.getUserId());
+        CarDTO carDTO = createTestCarDTO(savedCar.getCarId(), savedCar.getCarType().getVehicleType(),
+                savedCar.getStatus());
+
         ReservationDTO octReservation = createReservationDTO(
-                LocalDate.of(2023, 10, 1),
-                LocalDate.of(2023, 10, 3),
+                LocalDate.of(2024, 10, 1),
+                LocalDate.of(2024, 10, 3),
                 carDTO,
                 userDTO,
                 Reservation.ReservationStatus.ACTIVE);
 
         ReservationDTO novReservation = createReservationDTO(
-                LocalDate.of(2023, 11, 1),
-                LocalDate.of(2023, 11, 3),
+                LocalDate.of(2024, 11, 1),
+                LocalDate.of(2024, 11, 3),
                 carDTO,
                 userDTO,
                 Reservation.ReservationStatus.ACTIVE);
 
-        Reservation savedOctReservation = new Reservation(user, car, octReservation.getStartDate(),
-                octReservation.getEndDate(), octReservation.getStatus());
-        Reservation savedNovReservation = new Reservation(user, car, novReservation.getStartDate(),
-                novReservation.getEndDate(), novReservation.getStatus());
-
-        // Mock repository behavior
-        when(carRepository.findById(car.getCarId())).thenReturn(Optional.of(car));
-        when(carService.getCarById(carDTO.getCarId())).thenReturn(carDTO);
-        when(reservationRepository.save(any(Reservation.class)))
-                .thenReturn(savedOctReservation, savedNovReservation);
         // Execute and verify
         ReservationDTO createdOct = reservationService.createReservation(octReservation);
         ReservationDTO createdNov = reservationService.createReservation(novReservation);
@@ -106,83 +150,81 @@ public class ReservationServiceIntegrationTest {
 
     @Test
     void shouldFailWhenCreatingOverlappingReservations() {
-        // Setup test data
-        UserDTO userDTO = createTestUserDTO(1);
-        CarDTO carDTO = createTestCarDTO(1);
-        Car car = createTestCar(carDTO.getCarId(), Car.CarStatus.AVAILABLE);
-        User user = createTestUser(userDTO.getUserId());
+        // Create and persist test user
+        User user = createTestUser(1);
+        User savedUser = userRepository.save(user);
+
+        // Create and persist test car
+        CarType sedanType = carTypeRepository.findByVehicleType(VechicleType.SEDAN);
+        Car car = createTestCar(1, sedanType.getVehicleType(), Car.CarStatus.AVAILABLE);
+        Car savedCar = carRepository.save(car);
+
+        // Create DTOs using saved entities' IDs
+        UserDTO userDTO = createTestUserDTO(savedUser.getUserId());
+        CarDTO carDTO = createTestCarDTO(savedCar.getCarId(), savedCar.getCarType().getVehicleType(),
+                savedCar.getStatus());
 
         // Create overlapping reservations
-        ReservationDTO existingReservationDTO = createReservationDTO(
-                LocalDate.of(2023, 10, 1),
-                LocalDate.of(2023, 10, 5),
+        ReservationDTO firstReservation = createReservationDTO(
+                LocalDate.of(2024, 10, 1),
+                LocalDate.of(2024, 10, 5),
                 carDTO,
                 userDTO,
                 Reservation.ReservationStatus.ACTIVE);
 
-        ReservationDTO overlappingReservationDTO = createReservationDTO(
-                LocalDate.of(2023, 10, 3),
-                LocalDate.of(2023, 10, 7),
+        ReservationDTO overlappingReservation = createReservationDTO(
+                LocalDate.of(2024, 10, 3),
+                LocalDate.of(2024, 10, 7),
                 carDTO,
                 userDTO,
                 Reservation.ReservationStatus.ACTIVE);
 
-        Reservation existingReservation = new Reservation(user, car, existingReservationDTO.getStartDate(),
-                existingReservationDTO.getEndDate(), existingReservationDTO.getStatus());
-        // Mock repository behavior
-        when(carRepository.findById(car.getCarId())).thenReturn(Optional.of(car));
-        when(carService.getCarById(carDTO.getCarId())).thenReturn(carDTO);
+        // Create first reservation
+        reservationService.createReservation(firstReservation);
 
-        // Simple mock that always returns the same test data
-        when(reservationRepository.findByCarAndStatus(any(), any())).thenReturn(Arrays.asList(existingReservation));
-
-        when(reservationRepository.findByCarAndStatus(eq(car), eq(Reservation.ReservationStatus.ACTIVE)))
-                .thenReturn(Arrays.asList(existingReservation));
-
-        // Execute and verify
+        // Verify that creating overlapping reservation throws exception
         assertThrows(RuntimeException.class, () -> {
-            reservationService.createReservation(existingReservationDTO);
-            reservationService.createReservation(overlappingReservationDTO);
+            reservationService.createReservation(overlappingReservation);
         });
     }
 
     @Test
     void shouldHandleMultipleReservationsForDifferentCars() {
-        // Setup test data for two different cars
-        UserDTO userDTO = createTestUserDTO(1);
-        CarDTO carDTO1 = createTestCarDTO(1);
-        CarDTO carDTO2 = createTestCarDTO(2);
-        Car car1 = createTestCar(carDTO1.getCarId(), carDTO1.getStatus());
-        Car car2 = createTestCar(carDTO2.getCarId(), carDTO2.getStatus());
+        // Create and persist test user
         User user = createTestUser(1);
+        User savedUser = userRepository.save(user);
+
+        // Create and persist two different cars
+        CarType sedanType = carTypeRepository.findByVehicleType(VechicleType.SEDAN);
+        CarType vanType = carTypeRepository.findByVehicleType(VechicleType.VAN);
+
+        Car car1 = createTestCar(1, sedanType.getVehicleType(), Car.CarStatus.AVAILABLE);
+        Car car2 = createTestCar(2, vanType.getVehicleType(), Car.CarStatus.AVAILABLE);
+
+        Car savedCar1 = carRepository.save(car1);
+        Car savedCar2 = carRepository.save(car2);
+
+        // Create DTOs using saved entities' IDs
+        UserDTO userDTO = createTestUserDTO(savedUser.getUserId());
+        CarDTO carDTO1 = createTestCarDTO(savedCar1.getCarId(), savedCar1.getCarType().getVehicleType(),
+                savedCar1.getStatus());
+        CarDTO carDTO2 = createTestCarDTO(savedCar2.getCarId(), savedCar2.getCarType().getVehicleType(),
+                savedCar2.getStatus());
 
         // Create simultaneous reservations for different cars
         ReservationDTO reservation1 = createReservationDTO(
-                LocalDate.of(2023, 10, 1),
-                LocalDate.of(2023, 10, 3),
+                LocalDate.of(2024, 10, 1),
+                LocalDate.of(2024, 10, 3),
                 carDTO1,
                 userDTO,
                 Reservation.ReservationStatus.ACTIVE);
 
         ReservationDTO reservation2 = createReservationDTO(
-                LocalDate.of(2023, 10, 1),
-                LocalDate.of(2023, 10, 3),
+                LocalDate.of(2024, 10, 1),
+                LocalDate.of(2024, 10, 3),
                 carDTO2,
                 userDTO,
                 Reservation.ReservationStatus.ACTIVE);
-
-        Reservation savedReservation1 = new Reservation(user, car1, reservation1.getStartDate(),
-                reservation1.getEndDate(), reservation1.getStatus());
-        Reservation savedReservation2 = new Reservation(user, car2, reservation2.getStartDate(),
-                reservation2.getEndDate(), reservation2.getStatus());
-
-        // Mock repository behavior
-        when(carRepository.findById(car1.getCarId())).thenReturn(Optional.of(car1));
-        when(carRepository.findById(car2.getCarId())).thenReturn(Optional.of(car2));
-        when(carService.getCarById(carDTO1.getCarId())).thenReturn(carDTO1);
-        when(carService.getCarById(carDTO2.getCarId())).thenReturn(carDTO2);
-
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(savedReservation1, savedReservation2);
 
         // Execute and verify
         ReservationDTO created1 = reservationService.createReservation(reservation1);
@@ -193,6 +235,75 @@ public class ReservationServiceIntegrationTest {
         assertNotEquals(created1.getCar().getCarId(), created2.getCar().getCarId());
     }
 
+    @Test
+    void shouldFailWhenAllCarsOfDifferentTypesAreReservedForRequestedPeriod() {
+        // Create and persist test user
+        User user = createTestUser(1);
+        User savedUser = userRepository.save(user);
+
+        // Create and persist cars of different types
+        CarType sedanType = carTypeRepository.findByVehicleType(VechicleType.SEDAN);
+        CarType suvType = carTypeRepository.findByVehicleType(VechicleType.SUV);
+        CarType vanType = carTypeRepository.findByVehicleType(VechicleType.VAN);
+
+        Car sedan = createTestCar(1, sedanType.getVehicleType(), Car.CarStatus.AVAILABLE);
+        Car suv = createTestCar(2, suvType.getVehicleType(), Car.CarStatus.AVAILABLE);
+        Car van = createTestCar(3, vanType.getVehicleType(), Car.CarStatus.AVAILABLE);
+
+        Car savedSedan = carRepository.save(sedan);
+        Car savedSuv = carRepository.save(suv);
+        Car savedVan = carRepository.save(van);
+
+        // Create DTOs using saved entities' IDs
+        UserDTO userDTO = createTestUserDTO(savedUser.getUserId());
+        CarDTO sedanDTO = createTestCarDTO(savedSedan.getCarId(), savedSedan.getCarType().getVehicleType(),
+                savedSedan.getStatus());
+        CarDTO suvDTO = createTestCarDTO(savedSuv.getCarId(), savedSuv.getCarType().getVehicleType(),
+                savedSuv.getStatus());
+        CarDTO vanDTO = createTestCarDTO(savedVan.getCarId(), savedVan.getCarType().getVehicleType(),
+                savedVan.getStatus());
+
+        // Create reservations for all cars
+        ReservationDTO sedanReservation = createReservationDTO(
+                LocalDate.of(2024, 12, 1),
+                LocalDate.of(2024, 12, 5),
+                sedanDTO,
+                userDTO,
+                Reservation.ReservationStatus.ACTIVE);
+
+        ReservationDTO suvReservation = createReservationDTO(
+                LocalDate.of(2024, 12, 2),
+                LocalDate.of(2024, 12, 6),
+                suvDTO,
+                userDTO,
+                Reservation.ReservationStatus.ACTIVE);
+
+        ReservationDTO vanReservation = createReservationDTO(
+                LocalDate.of(2024, 12, 3),
+                LocalDate.of(2024, 12, 7),
+                vanDTO,
+                userDTO,
+                Reservation.ReservationStatus.ACTIVE);
+
+        // Create all initial reservations
+        reservationService.createReservation(sedanReservation);
+        reservationService.createReservation(suvReservation);
+        reservationService.createReservation(vanReservation);
+
+        // Attempt to create overlapping reservation
+        ReservationDTO newReservation = createReservationDTO(
+                LocalDate.of(2024, 12, 3),
+                LocalDate.of(2024, 12, 9),
+                suvDTO,
+                userDTO,
+                Reservation.ReservationStatus.ACTIVE);
+
+        // Verify that creating a new reservation fails
+        assertThrows(RuntimeException.class, () -> {
+            reservationService.createReservation(newReservation);
+        });
+    }
+
     private UserDTO createTestUserDTO(Integer userId) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(userId);
@@ -201,21 +312,19 @@ public class ReservationServiceIntegrationTest {
         return userDTO;
     }
 
-    private CarDTO createTestCarDTO(Integer carId) {
+    private CarDTO createTestCarDTO(Integer carId, VechicleType vehicleType, Car.CarStatus status) {
         CarDTO carDTO = new CarDTO();
         carDTO.setCarId(carId);
-        carDTO.setStatus(Car.CarStatus.AVAILABLE);
+        carDTO.setStatus(status);
+        carDTO.setVehicleType(vehicleType);
         return carDTO;
     }
 
-    private Car createTestCar(Integer carId, Car.CarStatus status) {
+    private Car createTestCar(Integer carId, VechicleType vehicleType, Car.CarStatus status) {
         Car car = new Car();
         car.setCarId(carId);
         car.setStatus(status);
-        CarType carType = new CarType();
-        carType.setCarTypeId(1);
-        carType.setVehicleType(VechicleType.SEDAN);
-        car.setCarType(carType);
+        car.setCarType(carTypeRepository.findByVehicleType(vehicleType));
         return car;
     }
 
