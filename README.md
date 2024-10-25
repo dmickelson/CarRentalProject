@@ -18,7 +18,7 @@ flexible object creation and secure data transfer between layers.
 
 ### Design Patterns
 
-- **Factory Pattern**: Vehicle creation and type management
+- **Factory Pattern**: Vehicle creation and type management, extensible for future vehicle types
 - **Repository Pattern**: Data access abstraction
 - **DTO Pattern**: Clean data transfer between layers
 - **Service Layer Pattern**: Business logic encapsulation
@@ -32,10 +32,10 @@ flexible object creation and secure data transfer between layers.
 Entities are the core domain objects that map directly to database tables and represent
 the fundamental data structures of the car rental system.
 
-- `Car`: Vehicle representation
-- `CarType`: Vehicle category definition
+- `Car`: Vehicle representation: Active, Reserved, Maintenance
+- `CarType`: Vehicle category definition: Sedan, SUV, Van
 - `User`: User account details
-- `Reservation`: Booking records
+- `Reservation`: Reservation records: Active, Cancelled, Completed
 
 #### Repositories
 
@@ -47,15 +47,6 @@ all CRUD (Create, Read, Update, Delete) operations for their respective entities
 - `UserRepository`: User data persistence
 - `CarTypeRepository`: Vehicle categories management
 
-#### Services
-
-Services encapsulate the core business logic and rules, acting as the intermediary
-between controllers and repositories while enforcing domain-specific operations and validations.
-
-- `CarService`: Vehicle inventory and availability logic
-- `ReservationService`: Booking management and validation
-- `UserService`: User authentication and profile management
-
 #### DTOs
 
 DTOs serve as lightweight data carriers that safely transfer information between the application
@@ -64,6 +55,15 @@ layers while hiding internal entity complexity.
 - `CarDTO`: Vehicle data transfer
 - `ReservationDTO`: Booking information transfer
 - `UserDTO`: User data transfer
+
+#### Services
+
+Services encapsulate the core business logic and rules, acting as the intermediary
+between controllers and repositories while enforcing domain-specific operations and validations.
+
+- `CarService`: Vehicle inventory and availability logic
+- `ReservationService`: Booking management and validation
+- `UserService`: User authentication and profile management
 
 #### Controllers
 
@@ -92,7 +92,7 @@ Outlines the separation of concerns and the flow of data between different layer
 ```mermaid
 graph TB
     subgraph UI_Layer[Presentation Layer]
-        UI[Vaadin UI Components]
+        UI[UI Components]
     end
 
     subgraph Controller_Layer[Controller Layer]
@@ -119,11 +119,12 @@ graph TB
     SVC --> REPO
     REPO --> H2
 
-    style UI_Layer fill:#e4f0f8
-    style Controller_Layer fill:#d5e8d4
-    style Service_Layer fill:#ffe6cc
-    style Repository_Layer fill:#fff2cc
-    style Database_Layer fill:#f8cecc
+    style UI_Layer fill:#2B5B84
+    style Controller_Layer fill:#1E4620
+    style Service_Layer fill:#8B4513
+    style Repository_Layer fill:#8B7355
+    style Database_Layer fill:#2F4F4F
+
 ```
 
 ### Class Diagram
