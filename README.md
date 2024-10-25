@@ -61,6 +61,7 @@ layers while hiding internal entity complexity.
 Services encapsulate the core business logic and rules, acting as the intermediary
 between controllers and repositories while enforcing domain-specific operations and validations.
 
+- `CarTypeService`: Handles vehicle type management and categorization logic
 - `CarService`: Vehicle inventory and availability logic
 - `ReservationService`: Booking management and validation
 - `UserService`: User authentication and profile management
@@ -70,6 +71,7 @@ between controllers and repositories while enforcing domain-specific operations 
 The Controllers in this Car Rental system handle HTTP requests and orchestrate the flow
 between the frontend UI and backend services.
 
+- `CarTypeController`: Manages vehicle type operations and classifications
 - `CarController`: Handles vehicle operations
 - `ReservationController`: Manages booking flows
 - `UserController`: User management endpoints
@@ -190,6 +192,11 @@ classDiagram
     }
 
     %% Services
+    class CarTypeService {
+        +getAllCarTypes() List<CarTypeDTO>
+        +getCarTypeById(Integer) CarTypeDTO
+        -convertToDTO(CarType) CarTypeDTO
+    }
     class CarService {
         +getCar(Integer) CarDTO
         +updateCarStatus(Integer, Status) CarDTO
@@ -204,6 +211,11 @@ classDiagram
     }
 
     %% Controllers
+    class CarTypeController {
+        +getAllCarTypes() List<CarTypeDTO>
+        +getCarTypeById(Integer) CarTypeDTO
+    }
+
     class CarController {
         +getCar(Integer) ResponseEntity
         +updateCar(CarDTO) ResponseEntity
@@ -228,10 +240,13 @@ classDiagram
     Reservation --> Car
     Reservation --> User
 
+    CarTypeController --> CarTypeService
     CarController --> CarService
     ReservationController --> ReservationService
     UserController --> UserService
 
+    CarTypeService --> CarTypeRepository
+    CarTypeService --> CarTypeDTO
     CarService --> CarRepository
     CarService --> CarFactory
     CarService --> CarDTO
@@ -243,6 +258,7 @@ classDiagram
     CarFactory ..> Car : creates
     CarFactory ..> CarDTO : creates
 
+    CarTypeDTO ..> CarType : transforms
     CarDTO ..> Car : transforms
     ReservationDTO ..> Reservation : transforms
     UserDTO ..> User : transforms
@@ -298,6 +314,8 @@ classDiagram
 
 - Clone the repository
 - Run `mvn clean install`
+- Test the application with `mvn test`
+- Run specific business integration tests with `mvn test -Dtest=ReservationServiceIntegrationTest`
 - Start the application with `mvn spring-boot:run`
 - Access the H2 console at `/h2-console`
 - Access the application at `localhost:8080`
