@@ -3,6 +3,10 @@ package com.company.carrental.service;
 import com.company.carrental.dto.UserDTO;
 import com.company.carrental.entity.User;
 import com.company.carrental.repository.UserRepository;
+
+import java.util.stream.Collectors;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,4 +65,11 @@ public class UserService {
         // Note: In a real application, you'd want to hash the password before saving
         // user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
     }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 }

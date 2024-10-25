@@ -31,7 +31,7 @@ public class User {
     private String password;
 
     public User() {
-        // Default constructor
+        this.password = "password"; // Set default password at entity level
     }
 
     public User(String firstName, String lastName, String username, String password) {
