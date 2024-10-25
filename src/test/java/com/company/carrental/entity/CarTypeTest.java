@@ -15,9 +15,9 @@ public class CarTypeTest {
         CarType suvType = new CarType(VechicleType.SUV);
         CarType vanType = new CarType(VechicleType.VAN);
 
-        assertEquals(VechicleType.SEDAN, sedanType.getVechicleType());
-        assertEquals(VechicleType.SUV, suvType.getVechicleType());
-        assertEquals(VechicleType.VAN, vanType.getVechicleType());
+        assertEquals(VechicleType.SEDAN, sedanType.getVehicleType());
+        assertEquals(VechicleType.SUV, suvType.getVehicleType());
+        assertEquals(VechicleType.VAN, vanType.getVehicleType());
     }
 
     @Test

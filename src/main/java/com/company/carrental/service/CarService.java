@@ -30,7 +30,7 @@ public class CarService {
         this.carTypeRepository = carTypeRepository;
         this.vehicleFactories = factories.stream()
                 .collect(Collectors.toMap(
-                        factory -> factory.createVehicle().getVechicleType(),
+                        factory -> factory.createVehicle().getVehicleType(),
                         factory -> factory));
     }
 
@@ -93,7 +93,7 @@ public class CarService {
         dto.setCarId(car.getCarId());
         dto.setStatus(car.getStatus());
         if (car.getCarType() != null) {
-            dto.setVehicleType(car.getCarType().getVechicleType());
+            dto.setVehicleType(car.getCarType().getVehicleType());
         }
         return dto;
     }

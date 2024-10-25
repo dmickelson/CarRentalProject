@@ -49,7 +49,7 @@ public class CarType {
         this.carTypeId = carTypeId;
     }
 
-    public VechicleType getVechicleType() {
+    public VechicleType getVehicleType() {
         return vehicleType;
     }
 

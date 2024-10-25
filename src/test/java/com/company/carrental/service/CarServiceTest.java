@@ -49,8 +49,8 @@ public class CarServiceTest {
         when(carTypeRepository.findByVehicleType(VechicleType.SEDAN)).thenReturn(sedanType);
 
         List<Car> mockCars = Arrays.asList(
-                new Car(11, sedanType, Car.CarStatus.AVAILABLE),
-                new Car(22, sedanType, Car.CarStatus.AVAILABLE));
+                new Car(sedanType, Car.CarStatus.AVAILABLE),
+                new Car(sedanType, Car.CarStatus.AVAILABLE));
 
         when(carRepository.findByCarType(sedanType)).thenReturn(mockCars);
 
@@ -67,9 +67,9 @@ public class CarServiceTest {
         when(carTypeRepository.findByVehicleType(VechicleType.SEDAN)).thenReturn(sedanType);
 
         List<Car> mockCars = Arrays.asList(
-                new Car(11, sedanType, Car.CarStatus.AVAILABLE),
-                new Car(22, sedanType, Car.CarStatus.AVAILABLE),
-                new Car(33, sedanType, Car.CarStatus.RESERVED));
+                new Car(sedanType, Car.CarStatus.AVAILABLE),
+                new Car(sedanType, Car.CarStatus.AVAILABLE),
+                new Car(sedanType, Car.CarStatus.RESERVED));
 
         when(carRepository.findByCarType(sedanType)).thenReturn(mockCars);
         when(carRepository.findByCarTypeAndStatus(sedanType, Car.CarStatus.AVAILABLE))

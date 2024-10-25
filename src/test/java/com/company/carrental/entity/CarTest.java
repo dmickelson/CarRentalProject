@@ -18,7 +18,7 @@ public class CarTest {
         car.setStatus(CarStatus.AVAILABLE);
 
         assertEquals(CarStatus.AVAILABLE, car.getStatus());
-        assertEquals(VechicleType.SEDAN, car.getCarType().getVechicleType());
+        assertEquals(VechicleType.SEDAN, car.getCarType().getVehicleType());
     }
 
     @Test
@@ -50,9 +50,9 @@ public class CarTest {
         CarType suvType = new CarType(VechicleType.SUV);
 
         car.setCarType(sedanType);
-        assertEquals(VechicleType.SEDAN, car.getCarType().getVechicleType());
+        assertEquals(VechicleType.SEDAN, car.getCarType().getVehicleType());
 
         car.setCarType(suvType);
-        assertEquals(VechicleType.SUV, car.getCarType().getVechicleType());
+        assertEquals(VechicleType.SUV, car.getCarType().getVehicleType());
     }
 }

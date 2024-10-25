@@ -27,7 +27,7 @@ public class CarTypeFactoryTest {
         CarType sedanType = sedanFactory.createVehicle();
 
         assertNotNull(sedanType);
-        assertEquals(VechicleType.SEDAN, sedanType.getVechicleType());
+        assertEquals(VechicleType.SEDAN, sedanType.getVehicleType());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class CarTypeFactoryTest {
         CarType suvType = suvFactory.createVehicle();
 
         assertNotNull(suvType);
-        assertEquals(VechicleType.SUV, suvType.getVechicleType());
+        assertEquals(VechicleType.SUV, suvType.getVehicleType());
     }
 
     @Test
@@ -44,6 +44,6 @@ public class CarTypeFactoryTest {
         CarType sedan = factories.get(0).createVehicle();
         CarType suv = factories.get(1).createVehicle();
 
-        assertNotEquals(sedan.getVechicleType(), suv.getVechicleType());
+        assertNotEquals(sedan.getVehicleType(), suv.getVehicleType());
     }
 }
