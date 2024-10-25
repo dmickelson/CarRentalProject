@@ -27,23 +27,15 @@ flexible object creation and secure data transfer between layers.
 
 ### Core Components
 
-#### Controllers
+#### Entities
 
-The Controllers in this Car Rental system handle HTTP requests and orchestrate the flow
-between the frontend UI and backend services.
+Entities are the core domain objects that map directly to database tables and represent
+the fundamental data structures of the car rental system.
 
-- `CarController`: Handles vehicle operations
-- `ReservationController`: Manages booking flows
-- `UserController`: User management endpoints
-
-#### Services
-
-Services encapsulate the core business logic and rules, acting as the intermediary
-between controllers and repositories while enforcing domain-specific operations and validations.
-
-- `CarService`: Vehicle inventory and availability logic
-- `ReservationService`: Booking management and validation
-- `UserService`: User authentication and profile management
+- `Car`: Vehicle representation
+- `CarType`: Vehicle category definition
+- `User`: User account details
+- `Reservation`: Booking records
 
 #### Repositories
 
@@ -55,6 +47,15 @@ all CRUD (Create, Read, Update, Delete) operations for their respective entities
 - `UserRepository`: User data persistence
 - `CarTypeRepository`: Vehicle categories management
 
+#### Services
+
+Services encapsulate the core business logic and rules, acting as the intermediary
+between controllers and repositories while enforcing domain-specific operations and validations.
+
+- `CarService`: Vehicle inventory and availability logic
+- `ReservationService`: Booking management and validation
+- `UserService`: User authentication and profile management
+
 #### DTOs
 
 DTOs serve as lightweight data carriers that safely transfer information between the application
@@ -64,15 +65,14 @@ layers while hiding internal entity complexity.
 - `ReservationDTO`: Booking information transfer
 - `UserDTO`: User data transfer
 
-#### Entities
+#### Controllers
 
-Entities are the core domain objects that map directly to database tables and represent
-the fundamental data structures of the car rental system.
+The Controllers in this Car Rental system handle HTTP requests and orchestrate the flow
+between the frontend UI and backend services.
 
-- `Car`: Vehicle representation
-- `CarType`: Vehicle category definition
-- `User`: User account details
-- `Reservation`: Booking records
+- `CarController`: Handles vehicle operations
+- `ReservationController`: Manages booking flows
+- `UserController`: User management endpoints
 
 ### Testing
 
@@ -84,6 +84,47 @@ Comprehensive integration tests covering:
 - Edge case handling
 
 ## Class Architecture
+
+### Layred Architecture Diagram
+
+Outlines the separation of concerns and the flow of data between different layers of the application.
+
+```mermaid
+graph TB
+    subgraph UI_Layer[Presentation Layer]
+        UI[Vaadin UI Components]
+    end
+
+    subgraph Controller_Layer[Controller Layer]
+        CTRL[REST Controllers]
+    end
+
+    subgraph Service_Layer[Service Layer]
+        SVC[Business Services]
+        DTO[DTOs]
+        FAC[Factories]
+    end
+
+    subgraph Repository_Layer[Repository Layer]
+        REPO[JPA Repositories]
+        ENT[Entities]
+    end
+
+    subgraph Database_Layer[Database Layer]
+        H2[H2 In-Memory Database]
+    end
+
+    UI --> CTRL
+    CTRL --> SVC
+    SVC --> REPO
+    REPO --> H2
+
+    style UI_Layer fill:#e4f0f8
+    style Controller_Layer fill:#d5e8d4
+    style Service_Layer fill:#ffe6cc
+    style Repository_Layer fill:#fff2cc
+    style Database_Layer fill:#f8cecc
+```
 
 ### Class Diagram
 
@@ -210,47 +251,6 @@ classDiagram
     UserRepository ..> User : persists
     CarTypeRepository ..> CarType : persists
 
-```
-
-### Layred Architecture Diagram
-
-Outlines the separation of concerns and the flow of data between different layers of the application.
-
-```mermaid
-graph TB
-    subgraph UI_Layer[Presentation Layer]
-        UI[Vaadin UI Components]
-    end
-
-    subgraph Controller_Layer[Controller Layer]
-        CTRL[REST Controllers]
-    end
-
-    subgraph Service_Layer[Service Layer]
-        SVC[Business Services]
-        DTO[DTOs]
-        FAC[Factories]
-    end
-
-    subgraph Repository_Layer[Repository Layer]
-        REPO[JPA Repositories]
-        ENT[Entities]
-    end
-
-    subgraph Database_Layer[Database Layer]
-        H2[H2 In-Memory Database]
-    end
-
-    UI --> CTRL
-    CTRL --> SVC
-    SVC --> REPO
-    REPO --> H2
-
-    style UI_Layer fill:#e4f0f8
-    style Controller_Layer fill:#d5e8d4
-    style Service_Layer fill:#ffe6cc
-    style Repository_Layer fill:#fff2cc
-    style Database_Layer fill:#f8cecc
 ```
 
 ## Dependencies
