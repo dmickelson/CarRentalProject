@@ -64,13 +64,17 @@ public class UserManagementView extends VerticalLayout {
 
     private void showRegistrationForm() {
         userForm.setVisible(true);
+        // Add form submission handler that calls userService.registerUser()
     }
 
     private void editUser(UserDTO user) {
-        // Implement edit logic
+        // Populate form with user data
+        // Add form submission handler that calls userService.updateUser()
     }
 
     private void deleteUser(UserDTO user) {
-        // Implement delete logic
+        userService.deleteUser(user.getUserId());
+        // Refresh grid data
     }
+
 }
