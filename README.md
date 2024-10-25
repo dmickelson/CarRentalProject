@@ -4,11 +4,17 @@ A robust car rental system built with Spring Boot implementing MVC architecture 
 
 ## Architecture Overview
 
+The Car Rental Project demonstrates robust SOLID principles through clear separation of concerns and single responsibility
+in each component, while the MVC architecture ensures clean data flow from the UI through controllers and services
+down to the H2 database. The implementation of factory patterns and DTOs further strengthens the design by providing
+flexible object creation and secure data transfer between layers.
+
 ### MVC Pattern
 
 - **Model**: Entity classes (Car, CarType, User, Reservation)
-- **View**: Vaadin UI components for web interface
+- **Service**: Services for business logic (CarService, ReservationService, UserService)
 - **Controller**: REST endpoints handling business logic routing
+- **View**: UI components for web interface
 
 ### Design Patterns
 
@@ -79,29 +85,31 @@ Comprehensive integration tests covering:
 
 ## Class Architecture
 
+### Class Diagram
+
 ```mermaid
 classDiagram
-%% Core Domain Entities
-class Car {
--Integer carId
--CarStatus status
--CarType type
-}
-class CarType {
--VehicleType type
--Integer typeId
-}
-class Reservation {
--Integer reservationId
--LocalDate startDate
--LocalDate endDate
--ReservationStatus status
-}
-class User {
--Integer userId
--String username
--String password
-}
+    %% Core Domain Entities
+    class Car {
+        -Integer carId
+        -CarStatus status
+        -CarType type
+    }
+    class CarType {
+        -VehicleType type
+        -Integer typeId
+    }
+    class Reservation {
+        -Integer reservationId
+        -LocalDate startDate
+        -LocalDate endDate
+        -ReservationStatus status
+    }
+    class User {
+        -Integer userId
+        -String username
+        -String password
+    }
 
     %% DTOs
     class CarDTO {
@@ -119,6 +127,24 @@ class User {
         -Integer userId
         -String firstName
         -String lastName
+    }
+
+    %% Repositories
+    class CarRepository {
+        +findById(Integer) Car
+        +save(Car) Car
+    }
+    class ReservationRepository {
+        +findById(Integer) Reservation
+        +save(Reservation) Reservation
+    }
+    class UserRepository {
+        +findById(Integer) User
+        +save(User) User
+    }
+    class CarTypeRepository {
+        +findById(Integer) CarType
+        +findByVehicleType(VehicleType) CarType
     }
 
     %% Services
@@ -164,9 +190,12 @@ class User {
     ReservationController --> ReservationService
     UserController --> UserService
 
+    CarService --> CarRepository
     CarService --> CarFactory
     CarService --> CarDTO
+    ReservationService --> ReservationRepository
     ReservationService --> ReservationDTO
+    UserService --> UserRepository
     UserService --> UserDTO
 
     CarFactory ..> Car : creates
@@ -176,6 +205,52 @@ class User {
     ReservationDTO ..> Reservation : transforms
     UserDTO ..> User : transforms
 
+    CarRepository ..> Car : persists
+    ReservationRepository ..> Reservation : persists
+    UserRepository ..> User : persists
+    CarTypeRepository ..> CarType : persists
+
+```
+
+### Layred Architecture Diagram
+
+Outlines the separation of concerns and the flow of data between different layers of the application.
+
+```mermaid
+graph TB
+    subgraph UI_Layer[Presentation Layer]
+        UI[Vaadin UI Components]
+    end
+
+    subgraph Controller_Layer[Controller Layer]
+        CTRL[REST Controllers]
+    end
+
+    subgraph Service_Layer[Service Layer]
+        SVC[Business Services]
+        DTO[DTOs]
+        FAC[Factories]
+    end
+
+    subgraph Repository_Layer[Repository Layer]
+        REPO[JPA Repositories]
+        ENT[Entities]
+    end
+
+    subgraph Database_Layer[Database Layer]
+        H2[H2 In-Memory Database]
+    end
+
+    UI --> CTRL
+    CTRL --> SVC
+    SVC --> REPO
+    REPO --> H2
+
+    style UI_Layer fill:#e4f0f8
+    style Controller_Layer fill:#d5e8d4
+    style Service_Layer fill:#ffe6cc
+    style Repository_Layer fill:#fff2cc
+    style Database_Layer fill:#f8cecc
 ```
 
 ## Dependencies
