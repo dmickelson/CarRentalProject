@@ -2,7 +2,7 @@ package com.company.carrental.ui.views;
 
 import com.company.carrental.dto.CarDTO;
 import com.company.carrental.entity.Car.CarStatus;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 import com.company.carrental.service.CarService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -15,7 +15,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
-@Route("cars")
+@Route(value = "cars", layout = MainLayout.class) // Update route value accordingly for each view
+
 public class CarManagementView extends VerticalLayout {
     private final CarService carService;
     private Grid<CarDTO> carGrid = new Grid<>(CarDTO.class);
@@ -56,8 +57,8 @@ public class CarManagementView extends VerticalLayout {
     }
 
     private void configureForm() {
-        ComboBox<VechicleType> vehicleType = new ComboBox<>("Vehicle Type");
-        vehicleType.setItems(VechicleType.values());
+        ComboBox<VehicleType> vehicleType = new ComboBox<>("Vehicle Type");
+        vehicleType.setItems(VehicleType.values());
 
         ComboBox<CarStatus> status = new ComboBox<>("Status");
         status.setItems(CarStatus.values());
@@ -77,7 +78,7 @@ public class CarManagementView extends VerticalLayout {
     private void editCar(CarDTO car) {
         carForm.setVisible(true);
 
-        ComboBox<VechicleType> vehicleType = (ComboBox<VechicleType>) carForm.getChildren()
+        ComboBox<VehicleType> vehicleType = (ComboBox<VehicleType>) carForm.getChildren()
                 .filter(component -> component instanceof ComboBox<?>)
                 .filter(component -> ((ComboBox<?>) component).getLabel().equals("Vehicle Type"))
                 .findFirst()
@@ -106,7 +107,7 @@ public class CarManagementView extends VerticalLayout {
         }
 
         saveButtonClickRegistration = saveButton.addClickListener(event -> {
-            ComboBox<VechicleType> vehicleType = (ComboBox<VechicleType>) carForm.getChildren()
+            ComboBox<VehicleType> vehicleType = (ComboBox<VehicleType>) carForm.getChildren()
                     .filter(component -> component instanceof ComboBox<?>)
                     .filter(component -> ((ComboBox<?>) component).getLabel().equals("Vehicle Type"))
                     .findFirst()
@@ -162,7 +163,7 @@ public class CarManagementView extends VerticalLayout {
     }
 
     private void clearForm() {
-        ComboBox<VechicleType> vehicleType = (ComboBox<VechicleType>) carForm.getChildren()
+        ComboBox<VehicleType> vehicleType = (ComboBox<VehicleType>) carForm.getChildren()
                 .filter(component -> component instanceof ComboBox<?>)
                 .filter(component -> ((ComboBox<?>) component).getLabel().equals("Vehicle Type"))
                 .findFirst()

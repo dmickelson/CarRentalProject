@@ -1,7 +1,7 @@
 package com.company.carrental.factory;
 
 import com.company.carrental.entity.CarType;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ public class CarTypeFactoryTest {
         CarType sedanType = sedanFactory.createVehicle();
 
         assertNotNull(sedanType);
-        assertEquals(VechicleType.SEDAN, sedanType.getVehicleType());
+        assertEquals(VehicleType.SEDAN, sedanType.getVehicleType());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class CarTypeFactoryTest {
         CarType suvType = suvFactory.createVehicle();
 
         assertNotNull(suvType);
-        assertEquals(VechicleType.SUV, suvType.getVehicleType());
+        assertEquals(VehicleType.SUV, suvType.getVehicleType());
     }
 
     @Test

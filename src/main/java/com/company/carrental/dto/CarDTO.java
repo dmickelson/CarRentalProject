@@ -1,11 +1,11 @@
 package com.company.carrental.dto;
 
 import com.company.carrental.entity.Car;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 
 public class CarDTO {
     private int carId;
-    private VechicleType vehicleType;
+    private VehicleType vehicleType;
     private Car.CarStatus status;
 
     public int getCarId() {
@@ -16,11 +16,11 @@ public class CarDTO {
         this.carId = carId;
     }
 
-    public VechicleType getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(VechicleType vehicleType) {
+    public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 

@@ -2,7 +2,7 @@ package com.company.carrental.service;
 
 import com.company.carrental.entity.Car;
 import com.company.carrental.entity.CarType;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 import com.company.carrental.repository.CarRepository;
 import com.company.carrental.repository.CarTypeRepository;
 import com.company.carrental.factory.SedanFactory;
@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,7 +47,7 @@ public class CarServiceTest {
     void shouldGetAvailableCarsByType() {
         // Use SedanFactory to create CarType
         CarType sedanType = new SedanFactory().createVehicle();
-        when(carTypeRepository.findByVehicleType(VechicleType.SEDAN)).thenReturn(sedanType);
+        when(carTypeRepository.findByVehicleType(VehicleType.SEDAN)).thenReturn(sedanType);
 
         List<Car> mockCars = Arrays.asList(
                 new Car(sedanType, Car.CarStatus.AVAILABLE),
@@ -64,7 +65,7 @@ public class CarServiceTest {
     void shouldFilterAvailableCarsByType() {
         // Use SedanFactory to create CarType
         CarType sedanType = new SedanFactory().createVehicle();
-        when(carTypeRepository.findByVehicleType(VechicleType.SEDAN)).thenReturn(sedanType);
+        when(carTypeRepository.findByVehicleType(VehicleType.SEDAN)).thenReturn(sedanType);
 
         List<Car> mockCars = Arrays.asList(
                 new Car(sedanType, Car.CarStatus.AVAILABLE),
@@ -87,11 +88,11 @@ public class CarServiceTest {
     @Test
     void shouldCreateCarWithFactory() {
         CarDTO carDTO = new CarDTO();
-        carDTO.setVehicleType(VechicleType.SEDAN);
+        carDTO.setVehicleType(VehicleType.SEDAN);
         carDTO.setStatus(Car.CarStatus.AVAILABLE);
 
         CarType sedanType = new SedanFactory().createVehicle();
-        when(carTypeRepository.findByVehicleType(VechicleType.SEDAN)).thenReturn(sedanType);
+        when(carTypeRepository.findByVehicleType(VehicleType.SEDAN)).thenReturn(sedanType);
 
         Car newCar = new Car();
         newCar.setCarId(1);
@@ -103,7 +104,7 @@ public class CarServiceTest {
         CarDTO createdCar = carService.createCar(carDTO);
 
         assertNotNull(createdCar);
-        assertEquals(VechicleType.SEDAN, createdCar.getVehicleType());
+        assertEquals(VehicleType.SEDAN, createdCar.getVehicleType());
         assertEquals(Car.CarStatus.AVAILABLE, createdCar.getStatus());
     }
 }

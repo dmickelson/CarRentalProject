@@ -4,20 +4,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 
 @DataJpaTest
 public class CarTypeTest {
 
     @Test
     void shouldHaveThreeValidCarTypes() {
-        CarType sedanType = new CarType(VechicleType.SEDAN);
-        CarType suvType = new CarType(VechicleType.SUV);
-        CarType vanType = new CarType(VechicleType.VAN);
+        CarType sedanType = new CarType(VehicleType.SEDAN);
+        CarType suvType = new CarType(VehicleType.SUV);
+        CarType vanType = new CarType(VehicleType.VAN);
 
-        assertEquals(VechicleType.SEDAN, sedanType.getVehicleType());
-        assertEquals(VechicleType.SUV, suvType.getVehicleType());
-        assertEquals(VechicleType.VAN, vanType.getVehicleType());
+        assertEquals(VehicleType.SEDAN, sedanType.getVehicleType());
+        assertEquals(VehicleType.SUV, suvType.getVehicleType());
+        assertEquals(VehicleType.VAN, vanType.getVehicleType());
     }
 
     @Test
@@ -26,7 +26,7 @@ public class CarTypeTest {
             // Attempt to create a CarType with an invalid enum value
             CarType invalidType = new CarType();
             invalidType.setCarTypeId(4);
-            invalidType.setVechicleType(VechicleType.valueOf("TRUCK"));
+            invalidType.setVehicleType(VehicleType.valueOf("TRUCK"));
         });
     }
 

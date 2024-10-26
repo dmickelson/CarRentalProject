@@ -3,7 +3,7 @@ package com.company.carrental.service;
 import com.company.carrental.dto.CarDTO;
 import com.company.carrental.entity.Car;
 import com.company.carrental.entity.CarType;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 import com.company.carrental.factory.*;
 import com.company.carrental.repository.CarRepository;
 import com.company.carrental.repository.CarTypeRepository;
@@ -20,7 +20,7 @@ public class CarService {
 
     private final CarRepository carRepository;
     private final CarTypeRepository carTypeRepository;
-    private final Map<VechicleType, VehicleTypeFactory> vehicleFactories;
+    private final Map<VehicleType, VehicleTypeFactory> vehicleFactories;
 
     @Autowired
     public CarService(CarRepository carRepository,

@@ -1,10 +1,10 @@
 package com.company.carrental.dto;
 
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 
 public class CarTypeDTO {
     private int carTypeId;
-    private VechicleType vehicleType;
+    private VehicleType vehicleType;
 
     public int getCarTypeId() {
         return carTypeId;
@@ -14,11 +14,11 @@ public class CarTypeDTO {
         this.carTypeId = carTypeId;
     }
 
-    public VechicleType getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(VechicleType vehicleType) {
+    public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 }

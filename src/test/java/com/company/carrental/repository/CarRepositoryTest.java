@@ -1,7 +1,7 @@
 package com.company.carrental.repository;
 
 import com.company.carrental.entity.CarType;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 
 import com.company.carrental.entity.Car;
 
@@ -32,9 +32,9 @@ public class CarRepositoryTest {
     @Test
     void shouldMaintainCarInventoryLimits() {
         // Get existing car types from data.sql
-        CarType sedanType = carTypeRepository.findByVehicleType(VechicleType.SEDAN);
-        CarType suvType = carTypeRepository.findByVehicleType(VechicleType.SUV);
-        CarType vanType = carTypeRepository.findByVehicleType(VechicleType.VAN);
+        CarType sedanType = carTypeRepository.findByVehicleType(VehicleType.SEDAN);
+        CarType suvType = carTypeRepository.findByVehicleType(VehicleType.SUV);
+        CarType vanType = carTypeRepository.findByVehicleType(VehicleType.VAN);
 
         // Create cars
         int expectedSedanCount = 2;
@@ -67,7 +67,7 @@ public class CarRepositoryTest {
         // Clear existing data first
         carRepository.deleteAll();
 
-        CarType sedanType = carTypeRepository.findByVehicleType(VechicleType.SEDAN);
+        CarType sedanType = carTypeRepository.findByVehicleType(VehicleType.SEDAN);
 
         Car availableSedan1 = new Car(sedanType, Car.CarStatus.AVAILABLE);
         Car availableSedan2 = new Car(sedanType, Car.CarStatus.AVAILABLE);

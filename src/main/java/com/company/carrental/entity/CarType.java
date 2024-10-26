@@ -26,9 +26,9 @@ public class CarType {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private VechicleType vehicleType;
+    private VehicleType vehicleType;
 
-    public enum VechicleType {
+    public enum VehicleType {
         SEDAN, SUV, VAN
     }
 
@@ -36,7 +36,7 @@ public class CarType {
         // Default constructor
     }
 
-    public CarType(VechicleType vehicleType) {
+    public CarType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 
@@ -49,11 +49,11 @@ public class CarType {
         this.carTypeId = carTypeId;
     }
 
-    public VechicleType getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVechicleType(VechicleType vehicleType) {
+    public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 }

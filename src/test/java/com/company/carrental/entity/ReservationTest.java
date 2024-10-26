@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import com.company.carrental.entity.Reservation.ReservationStatus;
 import com.company.carrental.entity.Car.CarStatus;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 
 @DataJpaTest
 public class ReservationTest {
@@ -15,7 +15,7 @@ public class ReservationTest {
     @Test
     void shouldCreateValidReservation() {
         User user = new User();
-        CarType sedanType = new CarType(VechicleType.SEDAN);
+        CarType sedanType = new CarType(VehicleType.SEDAN);
         Car car = new Car(sedanType, CarStatus.AVAILABLE);
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(3);
@@ -73,7 +73,7 @@ public class ReservationTest {
         Reservation reservation = new Reservation();
         User user1 = new User();
         User user2 = new User();
-        CarType sedanType = new CarType(VechicleType.SEDAN);
+        CarType sedanType = new CarType(VehicleType.SEDAN);
         Car car1 = new Car(sedanType, CarStatus.AVAILABLE);
         Car car2 = new Car(sedanType, CarStatus.AVAILABLE);
 

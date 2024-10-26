@@ -5,7 +5,7 @@ import com.company.carrental.dto.ReservationDTO;
 import com.company.carrental.dto.UserDTO;
 import com.company.carrental.entity.Car;
 import com.company.carrental.entity.CarType;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 import com.company.carrental.entity.Reservation;
 import com.company.carrental.entity.User;
 import com.company.carrental.repository.CarRepository;
@@ -201,7 +201,7 @@ public class ReservationServiceTest {
         car.setStatus(status);
         CarType carType = new CarType();
         carType.setCarTypeId(1);
-        carType.setVehicleType(VechicleType.SEDAN);
+        carType.setVehicleType(VehicleType.SEDAN);
         car.setCarType(carType);
         return car;
     }

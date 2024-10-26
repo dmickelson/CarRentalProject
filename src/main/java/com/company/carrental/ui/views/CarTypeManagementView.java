@@ -6,7 +6,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-@Route("cartypes")
+@Route(value = "cartypes", layout = MainLayout.class)
 public class CarTypeManagementView extends VerticalLayout {
     private final CarTypeService carTypeService;
     private Grid<CarTypeDTO> carTypeGrid = new Grid<>(CarTypeDTO.class);

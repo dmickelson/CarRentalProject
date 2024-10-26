@@ -1,7 +1,7 @@
 package com.company.carrental.repository;
 
 import com.company.carrental.entity.*;
-import com.company.carrental.entity.CarType.VechicleType;
+import com.company.carrental.entity.CarType.VehicleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class ReservationRepositoryTest {
         userRepository.save(testUser);
 
         // Create test car
-        CarType sedanType = carTypeRepository.findByVehicleType(VechicleType.SEDAN);
+        CarType sedanType = carTypeRepository.findByVehicleType(VehicleType.SEDAN);
         testCar = new Car(sedanType, Car.CarStatus.AVAILABLE);
         carRepository.save(testCar);
     }
