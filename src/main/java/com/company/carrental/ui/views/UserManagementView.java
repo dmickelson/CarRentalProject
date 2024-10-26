@@ -14,7 +14,7 @@ import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
-@Route("users")
+@Route(value = "users", layout = MainLayout.class)
 public class UserManagementView extends VerticalLayout {
     private final UserService userService;
 

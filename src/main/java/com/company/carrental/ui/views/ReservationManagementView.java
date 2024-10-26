@@ -20,7 +20,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
-@Route("reservations")
+@Route(value = "reservations", layout = MainLayout.class)
 public class ReservationManagementView extends VerticalLayout {
     private final ReservationService reservationService;
     private final CarService carService;
